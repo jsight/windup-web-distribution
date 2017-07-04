@@ -59,6 +59,8 @@ mkdir -p sso-builder/themes/
 cp -R ../themes/rhamt sso-builder/themes/
 cp sso-builder/themes/rhamt/login/login_required.theme.properties sso-builder/themes/rhamt/login/theme.properties
 
+
+
 # Checks if the "api.war" file has been added properly
 ls -al ${SERVICES_WAR}
 rc=$?; if [[ $rc != 0 ]]; then echo "Missing deployment. Please build and copy api.war to to ${SERVICES_WAR}"; exit $rc; fi
@@ -72,6 +74,7 @@ echo "Openshift project"
 echo "  -> Create Openshift project (${OCP_PROJECT})"
 oc new-project ${OCP_PROJECT} > /dev/null
 sleep 1
+
 echo "  -> Switch to project"
 oc project ${OCP_PROJECT} > /dev/null
 sleep 1
@@ -102,6 +105,7 @@ fi
 
 echo
 echo "Project setup"
+
 # Templates taken from https://github.com/jboss-openshift/application-templates/tree/master/secrets
 echo "  -> Populate EAP and SSO secrets"
 oc create -n ${OCP_PROJECT} -f templates/eap-app-secret.json
@@ -142,6 +146,8 @@ oc process -f templates/rhamt-template.json \
     -p SSO_URL=${SSO_URL} \
     -p SSO_PUBLIC_KEY=${SSO_PUBLIC_KEY} \
     -p POSTGRESQL_MAX_CONNECTIONS=200 \
+    -p MQ_QUEUES="executorQueue,statusUpdateQueue,packageDiscoveryQueue" \
+    -p MQ_TOPICS="executorCancellation" \
     -p DB_DATABASE=${DB_DATABASE} \
     -p DB_USERNAME=${DB_USERNAME} \
     -p DB_PASSWORD=${DB_PASSWORD} \
