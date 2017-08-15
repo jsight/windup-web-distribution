@@ -726,7 +726,7 @@
                                     },
                                     {
                                         "name": "${APPLICATION_NAME}-rhamt-web-pvol",
-                                        "mountPath": "/opt/eap/standalone/data",
+                                        "mountPath": "/opt/rhamt/data",
                                         "readOnly": false
                                     }
                                 ],
